@@ -2,6 +2,7 @@ import bentoml
 from bentoml.io import Image, JSON, Multipart
 from starlette.middleware.cors import CORSMiddleware
 import torch
+from diffusers import DiffusionPipeline
 from rembg import remove
 
 from contextlib import ExitStack
@@ -21,11 +22,10 @@ class StableDiffusionRunnable(bentoml.Runnable):
 
     def __init__(self):
 
-        TXT2IMG_MODEL_TAG = "txt2img_pixel_art_diffusion:latest"
+        TXT2IMG_MODEL_TAG = "PublicPrompts/All-In-One-Pixel-Model"
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        self.txt2img_pipe = bentoml.diffusers.load_model(TXT2IMG_MODEL_TAG,enable_xformers=False)#.to(self.device)
-        #pipeline을 매번 만드느라 느린 단점이 있다.
+        self.txt2img_pipe = DiffusionPipeline.from_pretrained(TXT2IMG_MODEL_TAG,torch_dtype=torch.float16).to(self.device)
 
     @bentoml.Runnable.method(batchable=False, batch_dim=0)
     def txt2img(self, parsed_json):
@@ -42,10 +42,10 @@ class StableDiffusionRunnable(bentoml.Runnable):
 
 stable_diffusion_runner = bentoml.Runner(StableDiffusionRunnable, name='stable_diffusion_runner', max_batch_size=10)
 
-svc = bentoml.Service("stable_diffusion_fp16", runners=[stable_diffusion_runner])
-svc.add_asgi_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"], expose_headers=["*"])
+stable_diffusion_fp16 = bentoml.Service("stable_diffusion_fp16", runners=[stable_diffusion_runner])
+stable_diffusion_fp16.add_asgi_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"], expose_headers=["*"])
 
-@svc.api(input=JSON(),output=Image(mime_type="image/png"))
+@stable_diffusion_fp16.api(input=JSON(),output=Image(mime_type="image/png"))
 def txt2img(parsed_json):
     #print(parsed_json)
     image = stable_diffusion_runner.txt2img.run(parsed_json)

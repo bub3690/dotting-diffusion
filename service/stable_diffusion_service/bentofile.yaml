@@ -1,0 +1,13 @@
+service: "txt2img_service:stable_diffusion_fp16"
+labels:
+  owner: JB
+  stage: dev
+include:
+  - "*.py"
+python:
+  packages:
+    - pytorch
+    - numpy
+    - rembg
+    - Pillow
+    - diffusers
