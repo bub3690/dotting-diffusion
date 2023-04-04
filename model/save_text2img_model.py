@@ -2,8 +2,12 @@
 #write code to save model to file
 
 import torch
+import bentoml
 from diffusers import DiffusionPipeline
 import bentoml
+import torch
+from diffusers import DiffusionPipeline
+from rembg import remove
 
 
 def load_diffusion_model_save_it_to_bento(model_path: str,model_name: str):

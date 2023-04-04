@@ -1,0 +1,21 @@
+service: "txt2img_service:stable_diffusion_fp16"
+labels:
+  owner: JB
+  stage: dev
+include:
+  - "*.py"
+  - "runners/*.py"
+python:
+  packages:
+    - torch
+    - numpy
+    - rembg
+    - Pillow
+    - transformers
+    - diffusers
+  extra_index_url:
+    - "https://download.pytorch.org/whl/cu113"
+docker:
+  distro: debian
+  python_version: "3.8.16"
+  cuda_version: "11.6.2"
