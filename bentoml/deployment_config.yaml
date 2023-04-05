@@ -1,0 +1,9 @@
+api_version: v1
+name: statble_diffusion_pixel
+operator:
+  name: google-compute-engine
+template: terraform
+spec:
+  project_id: bentoml-1
+  zone: asia-northeast3-b
+  machine_type: n1-standard-4
