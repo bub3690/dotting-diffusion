@@ -9,7 +9,6 @@ class StableDiffusionRunnable(bentoml.Runnable):
     SUPPORTS_CPU_MULTI_THREADING = True
 
     def __init__(self):
-
         TXT2IMG_MODEL_TAG = "PublicPrompts/All-In-One-Pixel-Model"
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         if self.device == "cuda":
@@ -19,13 +18,15 @@ class StableDiffusionRunnable(bentoml.Runnable):
 
     @bentoml.Runnable.method(batchable=False, batch_dim=0)
     def txt2img(self, parsed_json):
-        print("hello")
+        #print("hello")
         src_prompt = parsed_json.get("prompt") + ",pixelsprite,full body game asset,background chroma plain green"
 
         image = self.txt2img_pipe(src_prompt,
         guidance_scale=7.5,
         negative_prompt=",".join(['']),
-        ).images[0]
-        image = remove(image)#png 출력
-        
+        num_images_per_prompt=1,
+        ).images
+        #image = [ remove(sample) for sample in image]#png 출력
+        image = remove(image[0])
+
         return image

@@ -1,4 +1,4 @@
-service: "txt2img_service:stable_diffusion_fp16"
+service: "stablediffsuion_service:stable_diffusion_fp16"
 labels:
   owner: JB
   stage: dev
