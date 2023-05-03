@@ -2,6 +2,7 @@
 
 
 
+
 ## API example
 ```
 
@@ -49,4 +50,5 @@ request.ipynb 참조
 3. Moving to serverless inference
 4. More features using controlnet
 5. Data collection and fine-tuning
+6. Update spritesheet model
 
