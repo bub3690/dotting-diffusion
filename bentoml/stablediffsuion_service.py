@@ -3,6 +3,7 @@ from bentoml.io import Image, JSON, Multipart
 from starlette.middleware.cors import CORSMiddleware
 from runners.diffusion_runner import StableDiffusionRunnable
 from runners.image_remover_runner import ImageRemoverRunnable
+import json
 
 from io import BytesIO
 from google.cloud import storage
@@ -51,9 +52,6 @@ def upload_blob(bucket_name, image_file):
         contents = output.getvalue()
         
     blob.upload_from_string(contents, content_type='image/png')
-    # Make the file public
-    blob.make_public()
-
     # Print the URL of the file
     print(
         f"File uploaded to {blob.public_url}."
@@ -96,7 +94,7 @@ def txt2img(parsed_json):
 @stable_diffusion_fp16.api(input=JSON(),output=JSON())
 def txt2img_multi(parsed_json):
     #output : image path
-    files = JSON()
+    files = dict()
     
     print(parsed_json)
     image_list = stable_diffusion_runner.txt2img_multi.run(parsed_json) #List 형태
@@ -110,6 +108,7 @@ def txt2img_multi(parsed_json):
         files[file_name] = image_list[i]
 
     print(files)
+    files = json.dumps(files)
     return files
 
 
