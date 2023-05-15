@@ -82,12 +82,12 @@ stable_diffusion_fp16.add_asgi_middleware(CORSMiddleware, allow_origins=["*"], a
 def txt2img(parsed_json):
     #print(parsed_json)
     image = stable_diffusion_runner.txt2img.run(parsed_json) #List 형태
-    
-    # for i in range(len(image),6):
-    #     file_name = f'Image{i+1}'
-    #     files[file_name] = None
+    return image
 
-    #print(files.keys())
+@stable_diffusion_fp16.api(input=JSON(),output=Image(mime_type="image/png"))
+def txt2bg(parsed_json):
+    #print(parsed_json)
+    image = stable_diffusion_runner.txt2bg.run(parsed_json) #List 형태
     return image
 
 

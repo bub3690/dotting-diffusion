@@ -11,6 +11,8 @@ class StableDiffusionRunnable(bentoml.Runnable):
     def __init__(self):
         # 이부분을 bentoml model로 교체해야함.
         TXT2IMG_MODEL_TAG = "PublicPrompts/All-In-One-Pixel-Model"
+        TXT2IMG_MODEL_BENTOML_TAG = "txt2img_pixel_art_diffusion"
+        
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         if self.device == "cuda":
             self.txt2img_pipe = DiffusionPipeline.from_pretrained(TXT2IMG_MODEL_TAG,torch_dtype=torch.float16).to(self.device)
@@ -29,6 +31,23 @@ class StableDiffusionRunnable(bentoml.Runnable):
         ).images
         #image = [ remove(sample) for sample in image]#png 출력
         image = remove(image[0])
+
+        return image
+    
+    @bentoml.Runnable.method(batchable=False, batch_dim=0)
+    def txt2bg(self,parsed_json):
+        """
+        text to 16bit scene background
+        """
+        src_prompt = parsed_json.get("prompt") + ",16bitscene"
+
+        image = self.txt2img_pipe(src_prompt,
+        guidance_scale=7.5,
+        negative_prompt=",".join(['']),
+        num_images_per_prompt=1,
+        ).images
+        #image = [ remove(sample) for sample in image]#png 출력
+        image = image[0]
 
         return image
     
