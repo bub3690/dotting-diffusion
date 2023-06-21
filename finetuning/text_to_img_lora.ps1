@@ -1,0 +1,11 @@
+accelerate launch train_text_to_image_lora.py \
+--pretrained_model_name_or_path="runwayml/stable-diffusion-v1-5" `
+--train_data_dir="D:/project/dotting_ai/data/CHAR/train10" \
+--resolution=512 --center_crop `
+--train_batch_size=1 `
+--num_train_epochs=100 `
+--learning_rate=1e-04 --lr_scheduler="constant" --lr_warmup_steps=0 `
+--seed=42 `
+--output_dir="D:/project/dotting_ai/data/lora/spritesheet" `
+--validation_prompt="Donald Trump, spritesheet" `
+--validation_epochs=50

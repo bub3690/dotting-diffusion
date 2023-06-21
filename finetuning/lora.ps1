@@ -1,1 +1,13 @@
-accelerate launch train_dreambooth_lora.py --pretrained_model_name_or_path="runwayml/stable-diffusion-v1-5" --instance_data_dir="D:/project/dotting_ai/data/CHAR" --output_dir="D:/project/dotting_ai/data/dreambooth/spritesheet" --instance_prompt="spritesheet" --resolution=512 --train_batch_size=1 --gradient_accumulation_steps=1 --learning_rate=5e-6 --lr_scheduler="constant" --lr_warmup_steps=0 --max_train_steps=400   --validation_prompt="Donald Trump, spritesheet" --validation_epochs=50
+accelerate launch train_dreambooth_lora.py --pretrained_model_name_or_path="runwayml/stable-diffusion-v1-5" `
+--train_data_dir="D:/project/dotting_ai/data/CHAR/train10" `
+--output_dir="D:/project/dotting_ai/data/dreambooth/spritesheet" `
+--instance_prompt="spritesheet" `
+--resolution=512 `
+--train_batch_size=1 `
+--gradient_accumulation_steps=1 `
+--learning_rate=5e-6 `
+--lr_scheduler="constant" `
+--lr_warmup_steps=0 `
+--max_train_steps=400   `
+--validation_prompt="Donald Trump, spritesheet" `
+--validation_epochs=50
